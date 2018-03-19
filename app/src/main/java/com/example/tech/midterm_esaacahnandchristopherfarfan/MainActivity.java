@@ -1,14 +1,23 @@
 package com.example.tech.midterm_esaacahnandchristopherfarfan;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.media.Image;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
     public ImageButton card11ImgBtn, card12ImgBtn, card13ImgBtn, card21ImgBtn, card22ImgBtn,
             card23ImgBtn, card31ImgBtn, card32ImgBtn, card33ImgBtn;
+
+    public TextView gameMessageText;
+
+    public ImageButton firstCard;
 
     public static int[] cardImages = {R.drawable.cardback, R.drawable.card_1c,R.drawable.card_1d,
             R.drawable.card_1h, R.drawable.card_1s, R.drawable.card_2c, R.drawable.card_2d,
@@ -28,7 +37,9 @@ public class MainActivity extends Activity {
     private int cardMatrix[][] = new int[3][3];
     private boolean flippedCards[][] = new boolean[3][3];
     private int numOfFlippedCards = 0;
+    private int cardsToCompare[] = new int[2];
 
+    //Sets up the game board by picking random cards and positions
     void setUpCardGame(){
         // Random number between 1-52 (inclusive) used to setup card pairs
         int selectedCards[] = new int[9];
@@ -70,92 +81,136 @@ public class MainActivity extends Activity {
 
     }
 
-    boolean haveTwoCardsBeenFlipped(){
-        if (numOfFlippedCards >= 2){
-            return true;
-        } else{
-            return false;
-        }
-    }
-
-    void flipCard(int row, int col, ImageButton card){
+    //Flips a card
+    void flipCard(final int row, final int col, final ImageButton card){
         card.setImageResource(cardMatrix[row][col]);
         flippedCards[row][col] = true;
         numOfFlippedCards++;
-    }
+        if (numOfFlippedCards == 1){
+            cardsToCompare[0] = cardMatrix[row][col];
+            firstCard = card;
+        } else if (numOfFlippedCards == 2){
+            cardsToCompare[1] = cardMatrix[row][col];
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    checkMatch(row, col, card);
+                }
+            }, 500);
 
+        }
+
+    }
+    //Unflips a card
     void unflipCard(int row, int col , ImageButton card){
         card.setImageResource(cardImages[0]);
         flippedCards[row][col] = false;
         numOfFlippedCards--;
     }
 
+    //Checks if the two cards clicked are matching
+    void checkMatch(int rowOfSecondCard, int colOfSecondCard, ImageButton secondCard){
+        if (cardsToCompare[0] == cardsToCompare[1]){
+            gameMessageText.setText("Right!");
+            firstCard.setVisibility(View.INVISIBLE);
+            secondCard.setVisibility(View.INVISIBLE);
+            numOfFlippedCards = 0;
+            //updateScore();
+        }else{
+            gameMessageText.setText("Wrong! Pick again...");
 
-    void checkMatch(){
-
+            unflipCard(rowOfSecondCard, colOfSecondCard, secondCard);
+        }
     }
     //Event handler for when a card is clicked
     public void cardClicked(View view){
-        if (view.equals(card11ImgBtn)){
-            if (!flippedCards[0][0]) {
-                flipCard(0,0,card11ImgBtn);
-            }else{
-                unflipCard(0,0,card11ImgBtn);
-            }
-        } else if (view.equals(card12ImgBtn)){
-            if (!flippedCards[0][1]) {
-                flipCard(0,1,card12ImgBtn);
-            }else{
-                unflipCard(0,1,card12ImgBtn);
-            }
-        } else if (view.equals(card13ImgBtn)){
-            if (!flippedCards[0][2]) {
-                flipCard(0,2,card13ImgBtn);
-            }else{
-                unflipCard(0,2,card13ImgBtn);
-            }
-        } else if (view.equals(card21ImgBtn)){
-            if (!flippedCards[1][0]) {
-                flipCard(1,0,card21ImgBtn);
-            }else{
-                unflipCard(1,0,card21ImgBtn);
-            }
-        } else if (view.equals(card22ImgBtn)){
-            if (!flippedCards[1][1]) {
-                flipCard(1,1,card22ImgBtn);
-            }else{
-                unflipCard(1,1,card22ImgBtn);
-            }
-        } else if (view.equals(card23ImgBtn)){
-            if (!flippedCards[1][2]) {
-                flipCard(1,2,card23ImgBtn);
-            }else{
-                unflipCard(1,2,card23ImgBtn);
-            }
-        } else if (view.equals(card31ImgBtn)){
-            if (!flippedCards[2][0]) {
-                flipCard(2,0,card31ImgBtn);
-            }else{
-                unflipCard(2,0,card31ImgBtn);
-            }
-        } else if (view.equals(card32ImgBtn)){
-            if (!flippedCards[2][1]) {
-                flipCard(2,1,card32ImgBtn);
-            }else{
-                unflipCard(2,1,card32ImgBtn);
-            }
-        } else if (view.equals(card33ImgBtn)) {
-            if (!flippedCards[2][2]) {
-                flipCard(2,2,card33ImgBtn);
-            }else{
-                unflipCard(2,2,card33ImgBtn);
+        if (numOfFlippedCards < 2) {
+            if (view.equals(card11ImgBtn)) {
+                if (!flippedCards[0][0]) {
+                    flipCard(0, 0, card11ImgBtn);
+                } else {
+                    unflipCard(0, 0, card11ImgBtn);
+                }
+            } else if (view.equals(card12ImgBtn)) {
+                if (!flippedCards[0][1]) {
+                    flipCard(0, 1, card12ImgBtn);
+                } else {
+                    unflipCard(0, 1, card12ImgBtn);
+                }
+            } else if (view.equals(card13ImgBtn)) {
+                if (!flippedCards[0][2]) {
+                    flipCard(0, 2, card13ImgBtn);
+                } else {
+                    unflipCard(0, 2, card13ImgBtn);
+                }
+            } else if (view.equals(card21ImgBtn)) {
+                if (!flippedCards[1][0]) {
+                    flipCard(1, 0, card21ImgBtn);
+                } else {
+                    unflipCard(1, 0, card21ImgBtn);
+                }
+            } else if (view.equals(card22ImgBtn)) {
+                if (!flippedCards[1][1]) {
+                    flipCard(1, 1, card22ImgBtn);
+                } else {
+                    unflipCard(1, 1, card22ImgBtn);
+                }
+            } else if (view.equals(card23ImgBtn)) {
+                if (!flippedCards[1][2]) {
+                    flipCard(1, 2, card23ImgBtn);
+                } else {
+                    unflipCard(1, 2, card23ImgBtn);
+                }
+            } else if (view.equals(card31ImgBtn)) {
+                if (!flippedCards[2][0]) {
+                    flipCard(2, 0, card31ImgBtn);
+                } else {
+                    unflipCard(2, 0, card31ImgBtn);
+                }
+            } else if (view.equals(card32ImgBtn)) {
+                if (!flippedCards[2][1]) {
+                    flipCard(2, 1, card32ImgBtn);
+                } else {
+                    unflipCard(2, 1, card32ImgBtn);
+                }
+            } else if (view.equals(card33ImgBtn)) {
+                if (!flippedCards[2][2]) {
+                    flipCard(2, 2, card33ImgBtn);
+                } else {
+                    unflipCard(2, 2, card33ImgBtn);
+                }
             }
         }
+    }
+    //Called when the game finishes i.e. when the timer hits 0
+    //Creates an alert dialog asking the user if they wish to play again
+    public void gameEnd()
+    {
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+        alertBuilder.setTitle("Time's up!");
+        alertBuilder.setMessage("Score: " + 4 +"! " + " Do you want to play again?");
+        alertBuilder.setCancelable(false);
 
-        if (haveTwoCardsBeenFlipped()){
-            checkMatch();
-        }
+        alertBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener()
+        {
 
+            @Override
+            public void onClick(DialogInterface arg0, int arg1)
+            {
+                MainActivity.super.recreate();
+            }
+        });
+
+        alertBuilder.setNegativeButton("No", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                finish();
+            }
+        });
+
+        alertBuilder.show();
     }
 
     @Override
@@ -173,11 +228,10 @@ public class MainActivity extends Activity {
         card32ImgBtn = findViewById(R.id.Card32);
         card33ImgBtn = findViewById(R.id.Card33);
 
+        gameMessageText = findViewById(R.id.messageText);
+
         setUpCardGame();
 
     }
 
-    void gameLoop(){
-
-    }
 }
