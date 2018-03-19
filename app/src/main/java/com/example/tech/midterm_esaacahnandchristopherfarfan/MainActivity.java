@@ -2,6 +2,7 @@ package com.example.tech.midterm_esaacahnandchristopherfarfan;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageButton;
 
 public class MainActivity extends Activity {
@@ -26,6 +27,9 @@ public class MainActivity extends Activity {
 
     private int cardMatrix[][] = new int[3][3];
 
+    private boolean haveTwoCardsBeenFlipped = false;
+    private boolean flippedCards[][] = new boolean[3][3];
+
     void setUpCardGame(){
         // Random number between 1-52 (inclusive) used to setup card pairs
         int selectedCards[] = new int[9];
@@ -45,6 +49,7 @@ public class MainActivity extends Activity {
                 int randSelection = (int) Math.floor((Math.random() * 9));
                 if (hasBeenSelected[randSelection] == false){
                     cardMatrix[i][j] = cardImages[selectedCards[randSelection]];
+                    hasBeenSelected[randSelection] = true;
                 } else {
                     int nextAvailableCard = 0;
                     for (int k = 0; k < 9; k++){
@@ -60,23 +65,97 @@ public class MainActivity extends Activity {
             }
         }
 
-        card11ImgBtn.setImageResource(cardMatrix[0][0]);
-        card12ImgBtn.setImageResource(cardMatrix[0][1]);
-        card13ImgBtn.setImageResource(cardMatrix[0][2]);
 
-        card21ImgBtn.setImageResource(cardMatrix[1][0]);
-        card22ImgBtn.setImageResource(cardMatrix[1][1]);
-        card23ImgBtn.setImageResource(cardMatrix[1][2]);
-
-        card31ImgBtn.setImageResource(cardMatrix[1][0]);
-        card32ImgBtn.setImageResource(cardMatrix[1][1]);
-        card33ImgBtn.setImageResource(cardMatrix[1][2]);
 
 
 
     }
 
     void checkMatch(){
+
+    }
+    //Event handler for when a card is clicked
+    public void cardClicked(View view){
+        if (view.equals(card11ImgBtn)){
+            if (!flippedCards[0][0]) {
+                card11ImgBtn.setImageResource(cardMatrix[0][0]);
+                flippedCards[0][0] = true;
+            }else{
+                flippedCards[0][0] = false;
+                card11ImgBtn.setImageResource(cardImages[0]);
+            }
+        } else if (view.equals(card12ImgBtn)){
+            if (!flippedCards[0][1]) {
+                card12ImgBtn.setImageResource(cardMatrix[0][1]);
+                flippedCards[0][1] = true;
+            }else{
+                flippedCards[0][1] = false;
+                card12ImgBtn.setImageResource(cardImages[0]);
+            }
+        } else if (view.equals(card13ImgBtn)){
+            if (!flippedCards[0][2]) {
+                card13ImgBtn.setImageResource(cardMatrix[0][2]);
+                flippedCards[0][2] = true;
+            }else{
+                flippedCards[0][2] = false;
+                card13ImgBtn.setImageResource(cardImages[0]);
+            }
+        } else if (view.equals(card21ImgBtn)){
+            if (!flippedCards[1][0]) {
+                card21ImgBtn.setImageResource(cardMatrix[1][0]);
+                flippedCards[1][0] = true;
+            }else{
+                flippedCards[1][0] = false;
+                card21ImgBtn.setImageResource(cardImages[0]);
+            }
+        } else if (view.equals(card22ImgBtn)){
+            if (!flippedCards[1][1]) {
+                card22ImgBtn.setImageResource(cardMatrix[1][1]);
+                flippedCards[1][1] = true;
+            }else{
+                flippedCards[1][1] = false;
+                card22ImgBtn.setImageResource(cardImages[0]);
+            }
+        } else if (view.equals(card23ImgBtn)){
+            if (!flippedCards[1][2]) {
+                card23ImgBtn.setImageResource(cardMatrix[1][2]);
+                flippedCards[1][2] = true;
+            }else{
+                flippedCards[1][2] = false;
+                card23ImgBtn.setImageResource(cardImages[0]);
+            }
+        } else if (view.equals(card31ImgBtn)){
+            if (!flippedCards[2][0]) {
+                card31ImgBtn.setImageResource(cardMatrix[2][0]);
+                flippedCards[2][0] = true;
+            }else{
+                flippedCards[2][0] = false;
+                card31ImgBtn.setImageResource(cardImages[0]);
+            }
+        } else if (view.equals(card32ImgBtn)){
+            if (!flippedCards[2][1]) {
+                card32ImgBtn.setImageResource(cardMatrix[2][1]);
+                flippedCards[2][1] = true;
+            }else{
+                flippedCards[2][1] = false;
+                card32ImgBtn.setImageResource(cardImages[0]);
+            }
+        } else if (view.equals(card33ImgBtn)) {
+            if (!flippedCards[2][2]) {
+                card33ImgBtn.setImageResource(cardMatrix[2][2]);
+                flippedCards[2][2] = true;
+            }else{
+                flippedCards[2][2] = false;
+                card33ImgBtn.setImageResource(cardImages[0]);
+            }
+        }
+
+        if (haveTwoCardsBeenFlipped){
+            checkMatch();
+            haveTwoCardsBeenFlipped = false;
+        }else{
+            haveTwoCardsBeenFlipped = true;
+        }
 
     }
 
