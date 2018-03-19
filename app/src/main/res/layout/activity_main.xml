@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--***********************************************************************************************
+    // App Name: MatchCards
+    // Authors: Christopher Farfan (101067074) & Esaac Ahn (100836038)
+    // Date: March 18th, 2018
+    // Midterm submission.
+    //
+    // Description:
+    // A simple game of memory that requires the user to match cards against a time limit
+    //
+    //  Revision History:
+    //  Can be found on https://github.com/bluCraze/MatchCards/commits/master
+    //*********************************************************************************************
+    -->
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,7 +21,7 @@
 
     <TextView
         android:id="@+id/messageText"
-        android:layout_width="171dp"
+        android:layout_width="396dp"
         android:layout_height="32dp"
         android:text="Pick a Card, any Card"
         android:textAlignment="center"
@@ -223,7 +236,7 @@
         app:layout_constraintVertical_bias="0.191" />
 
     <TextView
-        android:id="@+id/score"
+        android:id="@+id/gameScore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"

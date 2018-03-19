@@ -1,3 +1,16 @@
+//***********************************************************************************************
+// App Name: MatchCards
+// Authors: Christopher Farfan (101067074) & Esaac Ahn (100836038)
+// Date: March 11th, 2018
+// Midterm submission.
+//
+// Description:
+// A simple game of memory that requires the user to match cards against a time limit
+//
+//  Revision History:
+//  Can be found on https://github.com/bluCraze/MatchCards/commits/master
+//***********************************************************************************************
+
 package com.example.tech.midterm_esaacahnandchristopherfarfan;
 
 import android.app.Activity;
@@ -5,6 +18,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.media.Image;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.view.View;
 import android.widget.ImageButton;
@@ -15,9 +29,11 @@ public class MainActivity extends Activity {
     public ImageButton card11ImgBtn, card12ImgBtn, card13ImgBtn, card21ImgBtn, card22ImgBtn,
             card23ImgBtn, card31ImgBtn, card32ImgBtn, card33ImgBtn;
 
-    public TextView gameMessageText;
+    public TextView gameMessageText, gameTimeLeftText, gameScoreText;
 
     public ImageButton firstCard;
+
+    public int score, time;
 
     public static int[] cardImages = {R.drawable.cardback, R.drawable.card_1c,R.drawable.card_1d,
             R.drawable.card_1h, R.drawable.card_1s, R.drawable.card_2c, R.drawable.card_2d,
@@ -45,6 +61,8 @@ public class MainActivity extends Activity {
         int selectedCards[] = new int[9];
         boolean hasBeenSelected[] = new boolean[9];
         int leftoverCard = (int) Math.floor((Math.random() * 52)+ 1);
+        score = 0;
+        time = 30;
 
         for (int x = 0; x < 7; x = x + 2){
             selectedCards[x] = (int) Math.floor((Math.random() * 52) + 1);
@@ -52,7 +70,6 @@ public class MainActivity extends Activity {
         }
 
         selectedCards[8] = leftoverCard;
-
 
         for (int i = 0; i < 3 ; i++){
             for (int j = 0; j < 3; j++){
@@ -75,13 +92,24 @@ public class MainActivity extends Activity {
             }
         }
 
+        new CountDownTimer(30000, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                gameTimeLeftText.setText(millisUntilFinished / 1000+" sec");
+            }
+
+            public void onFinish() {
+                gameEnd ();
+            }
+        }.start();
+
 
 
 
 
     }
 
-    //Flips a card
+    //Flips a card by changing the image to the corresponding card in the matrix
     void flipCard(final int row, final int col, final ImageButton card){
         card.setImageResource(cardMatrix[row][col]);
         flippedCards[row][col] = true;
@@ -89,6 +117,7 @@ public class MainActivity extends Activity {
         if (numOfFlippedCards == 1){
             cardsToCompare[0] = cardMatrix[row][col];
             firstCard = card;
+            gameMessageText.setText("Now pick another card");
         } else if (numOfFlippedCards == 2){
             cardsToCompare[1] = cardMatrix[row][col];
             new Handler().postDelayed(new Runnable() {
@@ -101,11 +130,17 @@ public class MainActivity extends Activity {
         }
 
     }
-    //Unflips a card
+    //Unflips a card by changing the image back to the cardback
     void unflipCard(int row, int col , ImageButton card){
         card.setImageResource(cardImages[0]);
         flippedCards[row][col] = false;
         numOfFlippedCards--;
+    }
+
+    //updates score when two cards are matched
+    void updateScore() {
+        score++;
+        gameScoreText.setText(score + " ");
     }
 
     //Checks if the two cards clicked are matching
@@ -115,14 +150,15 @@ public class MainActivity extends Activity {
             firstCard.setVisibility(View.INVISIBLE);
             secondCard.setVisibility(View.INVISIBLE);
             numOfFlippedCards = 0;
-            //updateScore();
+            updateScore();
         }else{
             gameMessageText.setText("Wrong! Pick again...");
 
             unflipCard(rowOfSecondCard, colOfSecondCard, secondCard);
         }
     }
-    //Event handler for when a card is clicked
+
+    //Event handler for when a card is clicked, decides whether it should flip the card or unflip
     public void cardClicked(View view){
         if (numOfFlippedCards < 2) {
             if (view.equals(card11ImgBtn)) {
@@ -182,13 +218,14 @@ public class MainActivity extends Activity {
             }
         }
     }
+
     //Called when the game finishes i.e. when the timer hits 0
     //Creates an alert dialog asking the user if they wish to play again
     public void gameEnd()
     {
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
         alertBuilder.setTitle("Time's up!");
-        alertBuilder.setMessage("Score: " + 4 +"! " + " Do you want to play again?");
+        alertBuilder.setMessage("Score: " + score +"! " + " Do you want to play again?");
         alertBuilder.setCancelable(false);
 
         alertBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener()
@@ -229,6 +266,8 @@ public class MainActivity extends Activity {
         card33ImgBtn = findViewById(R.id.Card33);
 
         gameMessageText = findViewById(R.id.messageText);
+        gameScoreText = findViewById(R.id.gameScore);
+        gameTimeLeftText = findViewById(R.id.timeLeft);
 
         setUpCardGame();
 
