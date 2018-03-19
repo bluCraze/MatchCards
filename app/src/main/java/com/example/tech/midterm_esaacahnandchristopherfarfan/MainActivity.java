@@ -26,9 +26,8 @@ public class MainActivity extends Activity {
             R.drawable.card_13h, R.drawable.card_13s};
 
     private int cardMatrix[][] = new int[3][3];
-
-    private boolean haveTwoCardsBeenFlipped = false;
     private boolean flippedCards[][] = new boolean[3][3];
+    private int numOfFlippedCards = 0;
 
     void setUpCardGame(){
         // Random number between 1-52 (inclusive) used to setup card pairs
@@ -71,6 +70,27 @@ public class MainActivity extends Activity {
 
     }
 
+    boolean haveTwoCardsBeenFlipped(){
+        if (numOfFlippedCards >= 2){
+            return true;
+        } else{
+            return false;
+        }
+    }
+
+    void flipCard(int row, int col, ImageButton card){
+        card.setImageResource(cardMatrix[row][col]);
+        flippedCards[row][col] = true;
+        numOfFlippedCards++;
+    }
+
+    void unflipCard(int row, int col , ImageButton card){
+        card.setImageResource(cardImages[0]);
+        flippedCards[row][col] = false;
+        numOfFlippedCards--;
+    }
+
+
     void checkMatch(){
 
     }
@@ -78,83 +98,62 @@ public class MainActivity extends Activity {
     public void cardClicked(View view){
         if (view.equals(card11ImgBtn)){
             if (!flippedCards[0][0]) {
-                card11ImgBtn.setImageResource(cardMatrix[0][0]);
-                flippedCards[0][0] = true;
+                flipCard(0,0,card11ImgBtn);
             }else{
-                flippedCards[0][0] = false;
-                card11ImgBtn.setImageResource(cardImages[0]);
+                unflipCard(0,0,card11ImgBtn);
             }
         } else if (view.equals(card12ImgBtn)){
             if (!flippedCards[0][1]) {
-                card12ImgBtn.setImageResource(cardMatrix[0][1]);
-                flippedCards[0][1] = true;
+                flipCard(0,1,card12ImgBtn);
             }else{
-                flippedCards[0][1] = false;
-                card12ImgBtn.setImageResource(cardImages[0]);
+                unflipCard(0,1,card12ImgBtn);
             }
         } else if (view.equals(card13ImgBtn)){
             if (!flippedCards[0][2]) {
-                card13ImgBtn.setImageResource(cardMatrix[0][2]);
-                flippedCards[0][2] = true;
+                flipCard(0,2,card13ImgBtn);
             }else{
-                flippedCards[0][2] = false;
-                card13ImgBtn.setImageResource(cardImages[0]);
+                unflipCard(0,2,card13ImgBtn);
             }
         } else if (view.equals(card21ImgBtn)){
             if (!flippedCards[1][0]) {
-                card21ImgBtn.setImageResource(cardMatrix[1][0]);
-                flippedCards[1][0] = true;
+                flipCard(1,0,card21ImgBtn);
             }else{
-                flippedCards[1][0] = false;
-                card21ImgBtn.setImageResource(cardImages[0]);
+                unflipCard(1,0,card21ImgBtn);
             }
         } else if (view.equals(card22ImgBtn)){
             if (!flippedCards[1][1]) {
-                card22ImgBtn.setImageResource(cardMatrix[1][1]);
-                flippedCards[1][1] = true;
+                flipCard(1,1,card22ImgBtn);
             }else{
-                flippedCards[1][1] = false;
-                card22ImgBtn.setImageResource(cardImages[0]);
+                unflipCard(1,1,card22ImgBtn);
             }
         } else if (view.equals(card23ImgBtn)){
             if (!flippedCards[1][2]) {
-                card23ImgBtn.setImageResource(cardMatrix[1][2]);
-                flippedCards[1][2] = true;
+                flipCard(1,2,card23ImgBtn);
             }else{
-                flippedCards[1][2] = false;
-                card23ImgBtn.setImageResource(cardImages[0]);
+                unflipCard(1,2,card23ImgBtn);
             }
         } else if (view.equals(card31ImgBtn)){
             if (!flippedCards[2][0]) {
-                card31ImgBtn.setImageResource(cardMatrix[2][0]);
-                flippedCards[2][0] = true;
+                flipCard(2,0,card31ImgBtn);
             }else{
-                flippedCards[2][0] = false;
-                card31ImgBtn.setImageResource(cardImages[0]);
+                unflipCard(2,0,card31ImgBtn);
             }
         } else if (view.equals(card32ImgBtn)){
             if (!flippedCards[2][1]) {
-                card32ImgBtn.setImageResource(cardMatrix[2][1]);
-                flippedCards[2][1] = true;
+                flipCard(2,1,card32ImgBtn);
             }else{
-                flippedCards[2][1] = false;
-                card32ImgBtn.setImageResource(cardImages[0]);
+                unflipCard(2,1,card32ImgBtn);
             }
         } else if (view.equals(card33ImgBtn)) {
             if (!flippedCards[2][2]) {
-                card33ImgBtn.setImageResource(cardMatrix[2][2]);
-                flippedCards[2][2] = true;
+                flipCard(2,2,card33ImgBtn);
             }else{
-                flippedCards[2][2] = false;
-                card33ImgBtn.setImageResource(cardImages[0]);
+                unflipCard(2,2,card33ImgBtn);
             }
         }
 
-        if (haveTwoCardsBeenFlipped){
+        if (haveTwoCardsBeenFlipped()){
             checkMatch();
-            haveTwoCardsBeenFlipped = false;
-        }else{
-            haveTwoCardsBeenFlipped = true;
         }
 
     }
